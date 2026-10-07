@@ -53,8 +53,7 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("")
   public UCSBOrganization getById(
-      @Parameter(description = "Organization code to look up", example = "SKY") @RequestParam
-          String id) {
+      @Parameter(description = "Organization code to look up") @RequestParam String id) {
     return ucsbOrganizationRepository
         .findById(id)
         .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(id)));
@@ -73,8 +72,7 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("")
   public Object deleteOrganization(
-      @Parameter(description = "Organization code to delete", example = "SKY") @RequestParam
-          String id) {
+      @Parameter(description = "Organization code to delete") @RequestParam String id) {
     UCSBOrganization organization =
         ucsbOrganizationRepository
             .findById(id)
@@ -97,8 +95,7 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PutMapping("")
   public UCSBOrganization updateOrganization(
-      @Parameter(description = "Organization code to update", example = "SKY") @RequestParam
-          String id,
+      @Parameter(description = "Organization code to update") @RequestParam String id,
       @RequestBody @Valid UCSBOrganization incoming) {
     UCSBOrganization organization =
         ucsbOrganizationRepository
@@ -124,15 +121,10 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping("/post")
   public UCSBOrganization postOrganization(
-      @Parameter(description = "Unique organization code", example = "SKY") @RequestParam
-          String orgCode,
-      @Parameter(description = "Short organization name", example = "SKYDIVING CLUB") @RequestParam
-          String orgTranslationShort,
-      @Parameter(description = "Full organization name", example = "SKYDIVING CLUB AT UCSB")
-          @RequestParam
-          String orgTranslation,
-      @Parameter(description = "Whether the organization is inactive", example = "false")
-          @RequestParam
+      @Parameter(description = "Unique organization code") @RequestParam String orgCode,
+      @Parameter(description = "Short organization name") @RequestParam String orgTranslationShort,
+      @Parameter(description = "Full organization name") @RequestParam String orgTranslation,
+      @Parameter(description = "Whether the organization is inactive") @RequestParam
           boolean inactive) {
     UCSBOrganization organization = new UCSBOrganization();
     organization.setOrgCode(orgCode);
