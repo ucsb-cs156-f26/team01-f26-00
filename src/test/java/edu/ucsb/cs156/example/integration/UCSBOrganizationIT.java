@@ -75,6 +75,8 @@ public class UCSBOrganizationIT {
         .andExpect(jsonPath("$.paths['/api/UCSBOrganization/all'].get.summary").exists())
         .andExpect(jsonPath("$.paths['/api/UCSBOrganization/post'].post.summary").exists())
         .andExpect(
+            jsonPath("$.paths['/api/UCSBOrganization/post'].post.description").doesNotExist())
+        .andExpect(
             jsonPath("$.paths['/api/UCSBOrganization/post'].post.parameters.length()").value(4))
         .andExpect(
             jsonPath("$.paths['/api/UCSBOrganization/post'].post.parameters[0].name")
@@ -139,7 +141,7 @@ public class UCSBOrganizationIT {
           .perform(get("/v3/api-docs"))
           .andExpect(status().isOk())
           .andExpect(jsonPath(operation + ".summary").exists())
-          .andExpect(jsonPath(operation + ".description").exists())
+          .andExpect(jsonPath(operation + ".description").doesNotExist())
           .andExpect(jsonPath(operation + ".parameters[0].name").value("id"))
           .andExpect(jsonPath(operation + ".parameters[0].required").value(true))
           .andExpect(jsonPath(operation + ".parameters[0].schema.type").value("string"));

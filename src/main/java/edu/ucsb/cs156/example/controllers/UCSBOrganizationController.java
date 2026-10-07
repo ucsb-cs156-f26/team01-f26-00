@@ -46,10 +46,7 @@ public class UCSBOrganizationController extends ApiController {
    * @param id the organization's orgCode
    * @return the matching organization
    */
-  @Operation(
-      summary = "Get a UCSB organization",
-      description =
-          "The id parameter is the organization's orgCode. Returns 404 if it does not exist.")
+  @Operation(summary = "Get a UCSB organization")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("")
   public UCSBOrganization getById(
@@ -65,10 +62,7 @@ public class UCSBOrganizationController extends ApiController {
    * @param id the organization's orgCode
    * @return a message confirming deletion
    */
-  @Operation(
-      summary = "Delete a UCSB organization",
-      description =
-          "Requires the ADMIN role. The id parameter is the organization's orgCode. Returns 404 if it does not exist.")
+  @Operation(summary = "Delete a UCSB organization")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("")
   public Object deleteOrganization(
@@ -88,10 +82,7 @@ public class UCSBOrganizationController extends ApiController {
    * @param incoming the new short name, full name, and inactive flag
    * @return the updated organization
    */
-  @Operation(
-      summary = "Update a UCSB organization",
-      description =
-          "Requires the ADMIN role. Supply orgTranslationShort, orgTranslation, and inactive in the JSON body. The id parameter identifies orgCode, which remains unchanged. Returns 404 if it does not exist.")
+  @Operation(summary = "Update a UCSB organization")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PutMapping("")
   public UCSBOrganization updateOrganization(
@@ -117,7 +108,7 @@ public class UCSBOrganizationController extends ApiController {
    * @param inactive whether the organization is inactive
    * @return the saved organization
    */
-  @Operation(summary = "Create a UCSB organization", description = "Requires the ADMIN role.")
+  @Operation(summary = "Create a UCSB organization")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping("/post")
   public UCSBOrganization postOrganization(
