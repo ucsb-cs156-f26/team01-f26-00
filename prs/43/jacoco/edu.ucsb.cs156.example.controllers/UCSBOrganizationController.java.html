@@ -46,17 +46,14 @@ import org.springframework.web.bind.annotation.RestController;
    * @param id the organization's orgCode
    * @return the matching organization
    */
-  @Operation(
-      summary = &quot;Get a UCSB organization&quot;,
-      description =
-          &quot;The id parameter is the organization's orgCode. Returns 404 if it does not exist.&quot;)
+  @Operation(summary = &quot;Get a UCSB organization&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_USER')&quot;)
   @GetMapping(&quot;&quot;)
   public UCSBOrganization getById(
       @Parameter(description = &quot;Organization code to look up&quot;) @RequestParam String id) {
-<span class="fc" id="L57">    return ucsbOrganizationRepository</span>
-<span class="fc" id="L58">        .findById(id)</span>
-<span class="fc" id="L59">        .orElseThrow(() -&gt; new EntityNotFoundException(&quot;id %s not found&quot;.formatted(id)));</span>
+<span class="fc" id="L54">    return ucsbOrganizationRepository</span>
+<span class="fc" id="L55">        .findById(id)</span>
+<span class="fc" id="L56">        .orElseThrow(() -&gt; new EntityNotFoundException(&quot;id %s not found&quot;.formatted(id)));</span>
   }
 
   /**
@@ -65,20 +62,17 @@ import org.springframework.web.bind.annotation.RestController;
    * @param id the organization's orgCode
    * @return a message confirming deletion
    */
-  @Operation(
-      summary = &quot;Delete a UCSB organization&quot;,
-      description =
-          &quot;Requires the ADMIN role. The id parameter is the organization's orgCode. Returns 404 if it does not exist.&quot;)
+  @Operation(summary = &quot;Delete a UCSB organization&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
   @DeleteMapping(&quot;&quot;)
   public Object deleteOrganization(
       @Parameter(description = &quot;Organization code to delete&quot;) @RequestParam String id) {
-<span class="fc" id="L76">    UCSBOrganization organization =</span>
+<span class="fc" id="L70">    UCSBOrganization organization =</span>
         ucsbOrganizationRepository
-<span class="fc" id="L78">            .findById(id)</span>
-<span class="fc" id="L79">            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;record %s not found&quot;.formatted(id)));</span>
-<span class="fc" id="L80">    ucsbOrganizationRepository.delete(organization);</span>
-<span class="fc" id="L81">    return genericMessage(&quot;record %s deleted&quot;.formatted(id));</span>
+<span class="fc" id="L72">            .findById(id)</span>
+<span class="fc" id="L73">            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;record %s not found&quot;.formatted(id)));</span>
+<span class="fc" id="L74">    ucsbOrganizationRepository.delete(organization);</span>
+<span class="fc" id="L75">    return genericMessage(&quot;record %s deleted&quot;.formatted(id));</span>
   }
 
   /**
@@ -88,24 +82,21 @@ import org.springframework.web.bind.annotation.RestController;
    * @param incoming the new short name, full name, and inactive flag
    * @return the updated organization
    */
-  @Operation(
-      summary = &quot;Update a UCSB organization&quot;,
-      description =
-          &quot;Requires the ADMIN role. Supply orgTranslationShort, orgTranslation, and inactive in the JSON body. The id parameter identifies orgCode, which remains unchanged. Returns 404 if it does not exist.&quot;)
+  @Operation(summary = &quot;Update a UCSB organization&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
   @PutMapping(&quot;&quot;)
   public UCSBOrganization updateOrganization(
       @Parameter(description = &quot;Organization code to update&quot;) @RequestParam String id,
       @RequestBody @Valid UCSBOrganization incoming) {
-<span class="fc" id="L100">    UCSBOrganization organization =</span>
+<span class="fc" id="L91">    UCSBOrganization organization =</span>
         ucsbOrganizationRepository
-<span class="fc" id="L102">            .findById(id)</span>
-<span class="fc" id="L103">            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;id %s not found&quot;.formatted(id)));</span>
-<span class="fc" id="L104">    organization.setOrgTranslationShort(incoming.getOrgTranslationShort());</span>
-<span class="fc" id="L105">    organization.setOrgTranslation(incoming.getOrgTranslation());</span>
-<span class="fc" id="L106">    organization.setInactive(incoming.getInactive());</span>
-<span class="fc" id="L107">    ucsbOrganizationRepository.save(organization);</span>
-<span class="fc" id="L108">    return organization;</span>
+<span class="fc" id="L93">            .findById(id)</span>
+<span class="fc" id="L94">            .orElseThrow(() -&gt; new EntityNotFoundException(&quot;id %s not found&quot;.formatted(id)));</span>
+<span class="fc" id="L95">    organization.setOrgTranslationShort(incoming.getOrgTranslationShort());</span>
+<span class="fc" id="L96">    organization.setOrgTranslation(incoming.getOrgTranslation());</span>
+<span class="fc" id="L97">    organization.setInactive(incoming.getInactive());</span>
+<span class="fc" id="L98">    ucsbOrganizationRepository.save(organization);</span>
+<span class="fc" id="L99">    return organization;</span>
   }
 
   /**
@@ -117,7 +108,7 @@ import org.springframework.web.bind.annotation.RestController;
    * @param inactive whether the organization is inactive
    * @return the saved organization
    */
-  @Operation(summary = &quot;Create a UCSB organization&quot;, description = &quot;Requires the ADMIN role.&quot;)
+  @Operation(summary = &quot;Create a UCSB organization&quot;)
   @PreAuthorize(&quot;hasRole('ROLE_ADMIN')&quot;)
   @PostMapping(&quot;/post&quot;)
   public UCSBOrganization postOrganization(
@@ -126,12 +117,12 @@ import org.springframework.web.bind.annotation.RestController;
       @Parameter(description = &quot;Full organization name&quot;) @RequestParam String orgTranslation,
       @Parameter(description = &quot;Whether the organization is inactive&quot;) @RequestParam
           boolean inactive) {
-<span class="fc" id="L129">    UCSBOrganization organization = new UCSBOrganization();</span>
-<span class="fc" id="L130">    organization.setOrgCode(orgCode);</span>
-<span class="fc" id="L131">    organization.setOrgTranslationShort(orgTranslationShort);</span>
-<span class="fc" id="L132">    organization.setOrgTranslation(orgTranslation);</span>
-<span class="fc" id="L133">    organization.setInactive(inactive);</span>
-<span class="fc" id="L134">    return ucsbOrganizationRepository.save(organization);</span>
+<span class="fc" id="L120">    UCSBOrganization organization = new UCSBOrganization();</span>
+<span class="fc" id="L121">    organization.setOrgCode(orgCode);</span>
+<span class="fc" id="L122">    organization.setOrgTranslationShort(orgTranslationShort);</span>
+<span class="fc" id="L123">    organization.setOrgTranslation(orgTranslation);</span>
+<span class="fc" id="L124">    organization.setInactive(inactive);</span>
+<span class="fc" id="L125">    return ucsbOrganizationRepository.save(organization);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
