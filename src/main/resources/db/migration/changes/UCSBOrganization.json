@@ -1,0 +1,64 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "UCSBOrganization-1",
+        "author": "derekkirschbaum",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN"
+          },
+          {
+            "not": [
+              {
+                "tableExists": {
+                  "tableName": "UCSBORGANIZATIONS"
+                }
+              }
+            ]
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true,
+                      "primaryKeyName": "UCSBORGANIZATIONS_PK"
+                    },
+                    "name": "ORG_CODE",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ORG_TRANSLATION_SHORT",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "ORG_TRANSLATION",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "INACTIVE",
+                    "type": "BOOLEAN"
+                  }
+                }
+              ],
+              "tableName": "UCSBORGANIZATIONS"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

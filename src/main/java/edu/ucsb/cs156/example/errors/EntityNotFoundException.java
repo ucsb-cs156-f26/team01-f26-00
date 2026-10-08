@@ -6,6 +6,15 @@ package edu.ucsb.cs156.example.errors;
  */
 public class EntityNotFoundException extends RuntimeException {
   /**
+   * Constructor for an endpoint-specific not-found message.
+   *
+   * @param message the message returned to the caller
+   */
+  public EntityNotFoundException(String message) {
+    super(message);
+  }
+
+  /**
    * Constructor for the exception
    *
    * @param entityType The class of the entity that was not found, e.g. User.class
