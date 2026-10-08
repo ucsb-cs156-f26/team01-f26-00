@@ -6,13 +6,22 @@
  */
 public class EntityNotFoundException extends RuntimeException {
   /**
+   * Constructor for an endpoint-specific not-found message.
+   *
+   * @param message the message returned to the caller
+   */
+  public EntityNotFoundException(String message) {
+<span class="fc" id="L14">    super(message);</span>
+<span class="fc" id="L15">  }</span>
+
+  /**
    * Constructor for the exception
    *
    * @param entityType The class of the entity that was not found, e.g. User.class
    * @param id the id that was being searched for
    */
   public EntityNotFoundException(Class&lt;?&gt; entityType, Object id) {
-<span class="fc" id="L15">    super(&quot;%s with id %s not found&quot;.formatted(entityType.getSimpleName(), id.toString()));</span>
-<span class="fc" id="L16">  }</span>
+<span class="fc" id="L24">    super(&quot;%s with id %s not found&quot;.formatted(entityType.getSimpleName(), id.toString()));</span>
+<span class="fc" id="L25">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
