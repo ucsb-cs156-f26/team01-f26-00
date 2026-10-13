@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HomepageController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">team01</a> &gt; <a href="index.source.html" class="el_package">edu.ucsb.cs156.example.controllers</a> &gt; <span class="el_source">HomepageController.java</span></div><h1>HomepageController.java</h1><pre class="source lang-java linenums">package edu.ucsb.cs156.example.controllers;
+
+import edu.ucsb.cs156.example.services.CurrentUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.HtmlUtils;
+
+@RestController
+<span class="fc" id="L10">public class HomepageController {</span>
+
+  @Autowired CurrentUserService currentUserService;
+
+  @GetMapping(&quot;/&quot;)
+  public String index() {
+<span class="fc" id="L16">    String HomePageHTMLTemplate =</span>
+        &quot;&quot;&quot;
+        &lt;p&gt;This is the homepage for team01 which is simply a backend with no frontend.&lt;/p&gt;
+        &lt;p&gt;
+          &lt;ul&gt;
+            %s
+            %s
+            %s
+            &lt;li&gt;&lt;a href=&quot;/swagger-ui/index.html&quot;&gt;Swagger API Links&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;/h2-console&quot;&gt;H2 console (only on localhost)&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/p&gt;
+        &quot;&quot;&quot;;
+<span class="fc" id="L29">    return String.format(HomePageHTMLTemplate, getLoggedInAs(), getLoginLogoutLink(), getRoles());</span>
+  }
+
+  private String getLoginLogoutLink() {
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">    return currentUserService.isLoggedIn()</span>
+<span class="fc" id="L35">        ? &quot;&quot;&quot;</span>
+      &lt;li&gt;&lt;a href=&quot;/logout&quot;&gt;Logout&lt;/a&gt;&lt;/li&gt;&quot;&quot;&quot;
+<span class="fc" id="L37">        : &quot;&quot;&quot;</span>
+      &lt;li&gt;&lt;a href=&quot;/oauth2/authorization/google&quot;&gt;Login&lt;/a&gt;&lt;/li&gt;&quot;&quot;&quot;;
+  }
+
+  private String getLoggedInAs() {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">    return currentUserService.isLoggedIn()</span>
+<span class="fc" id="L43">        ? String.format(</span>
+            &quot;&lt;li&gt;Currently logged in as %s&lt;/li&gt;&quot;,
+<span class="fc" id="L45">            HtmlUtils.htmlEscape(currentUserService.getUser().getEmail()))</span>
+<span class="fc" id="L46">        : &quot;&lt;li&gt;Not logged in&lt;/li&gt;&quot;;</span>
+  }
+
+  private String getRoles() {
+<span class="fc" id="L50">    return String.format(</span>
+<span class="fc" id="L51">        &quot;&lt;li&gt;Roles: %s&lt;/li&gt;&quot;, HtmlUtils.htmlEscape(currentUserService.getRolesSorted().toString()));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>
