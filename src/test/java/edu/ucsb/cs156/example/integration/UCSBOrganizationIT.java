@@ -93,13 +93,13 @@ public class UCSBOrganizationIT {
     entityManager.flush();
     entityManager.clear();
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "123"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.orgTranslation").value("Full name"));
     mockMvc
         .perform(
             put("/api/UCSBOrganization")
-                .param("id", "123")
+                .param("orgCode", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
                     "{\"orgCode\":\"DIFFERENT\",\"orgTranslationShort\":\"New short name\",\"orgTranslation\":\"New full name\",\"inactive\":true}")
@@ -110,25 +110,25 @@ public class UCSBOrganizationIT {
     entityManager.flush();
     entityManager.clear();
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "123"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.orgTranslationShort").value("New short name"))
         .andExpect(jsonPath("$.orgTranslation").value("New full name"))
         .andExpect(jsonPath("$.inactive").value(true));
     assertFalse(ucsbOrganizationRepository.existsById("DIFFERENT"));
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "123").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "123").with(csrf()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("record 123 deleted"));
     entityManager.flush();
     entityManager.clear();
     assertFalse(ucsbOrganizationRepository.existsById("123"));
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "123"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("id 123 not found"));
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "123").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "123").with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("record 123 not found"));
   }
@@ -142,7 +142,7 @@ public class UCSBOrganizationIT {
           .andExpect(status().isOk())
           .andExpect(jsonPath(operation + ".summary").exists())
           .andExpect(jsonPath(operation + ".description").doesNotExist())
-          .andExpect(jsonPath(operation + ".parameters[0].name").value("id"))
+          .andExpect(jsonPath(operation + ".parameters[0].name").value("orgCode"))
           .andExpect(jsonPath(operation + ".parameters[0].required").value(true))
           .andExpect(jsonPath(operation + ".parameters[0].schema.type").value("string"));
     }
