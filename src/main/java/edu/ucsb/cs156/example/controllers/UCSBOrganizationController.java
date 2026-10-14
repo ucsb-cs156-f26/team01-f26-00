@@ -43,42 +43,43 @@ public class UCSBOrganizationController extends ApiController {
   /**
    * Look up an organization by its code. Accessible to logged-in users.
    *
-   * @param id the organization's orgCode
+   * @param orgCode the organization's orgCode
    * @return the matching organization
    */
   @Operation(summary = "Get a UCSB organization")
   @PreAuthorize("hasRole('ROLE_USER')")
   @GetMapping("")
   public UCSBOrganization getById(
-      @Parameter(description = "Organization code to look up") @RequestParam String id) {
+      @Parameter(description = "Organization code to look up") @RequestParam String orgCode) {
     return ucsbOrganizationRepository
-        .findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(id)));
+        .findById(orgCode)
+        .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(orgCode)));
   }
 
   /**
    * Delete an organization. Accessible only to administrators.
    *
-   * @param id the organization's orgCode
+   * @param orgCode the organization's orgCode
    * @return a message confirming deletion
    */
   @Operation(summary = "Delete a UCSB organization")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("")
   public Object deleteOrganization(
-      @Parameter(description = "Organization code to delete") @RequestParam String id) {
+      @Parameter(description = "Organization code to delete") @RequestParam String orgCode) {
     UCSBOrganization organization =
         ucsbOrganizationRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("record %s not found".formatted(id)));
+            .findById(orgCode)
+            .orElseThrow(
+                () -> new EntityNotFoundException("record %s not found".formatted(orgCode)));
     ucsbOrganizationRepository.delete(organization);
-    return genericMessage("record %s deleted".formatted(id));
+    return genericMessage("record %s deleted".formatted(orgCode));
   }
 
   /**
    * Update an organization's non-key fields. Accessible only to administrators.
    *
-   * @param id the organization's orgCode, which remains unchanged
+   * @param orgCode the organization's orgCode, which remains unchanged
    * @param incoming the new short name, full name, and inactive flag
    * @return the updated organization
    */
@@ -86,15 +87,15 @@ public class UCSBOrganizationController extends ApiController {
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PutMapping("")
   public UCSBOrganization updateOrganization(
-      @Parameter(description = "Organization code to update") @RequestParam String id,
+      @Parameter(description = "Organization code to update") @RequestParam String orgCode,
       @RequestBody @Valid UCSBOrganization incoming) {
     UCSBOrganization organization =
         ucsbOrganizationRepository
-            .findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(id)));
+            .findById(orgCode)
+            .orElseThrow(() -> new EntityNotFoundException("id %s not found".formatted(orgCode)));
     organization.setOrgTranslationShort(incoming.getOrgTranslationShort());
     organization.setOrgTranslation(incoming.getOrgTranslation());
-    organization.setInactive(incoming.getInactive());
+    organization.setInactive(incoming.isInactive());
     ucsbOrganizationRepository.save(organization);
     return organization;
   }

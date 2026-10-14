@@ -179,7 +179,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
 
   private MockHttpServletRequestBuilder organizationPut() {
     return put("/api/UCSBOrganization")
-        .param("id", "SKY")
+        .param("orgCode", "SKY")
         .contentType(MediaType.APPLICATION_JSON)
         .content(
             "{\"orgTranslationShort\":\"New short name\",\"orgTranslation\":\"New full name\",\"inactive\":true}");
@@ -188,10 +188,10 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   @Test
   public void logged_out_users_cannot_access_single_record_routes() throws Exception {
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "SKY"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "SKY"))
         .andExpect(status().isForbidden());
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "SKY").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "SKY").with(csrf()))
         .andExpect(status().isForbidden());
     mockMvc.perform(organizationPut().with(csrf())).andExpect(status().isForbidden());
     verifyNoInteractions(ucsbOrganizationRepository);
@@ -201,7 +201,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   @Test
   public void regular_users_cannot_delete_or_update() throws Exception {
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "SKY").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "SKY").with(csrf()))
         .andExpect(status().isForbidden());
     mockMvc.perform(organizationPut().with(csrf())).andExpect(status().isForbidden());
     verifyNoInteractions(ucsbOrganizationRepository);
@@ -211,7 +211,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   @Test
   public void admins_cannot_delete_or_update_without_csrf() throws Exception {
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "SKY"))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "SKY"))
         .andExpect(status().isForbidden());
     mockMvc.perform(organizationPut()).andExpect(status().isForbidden());
     verifyNoInteractions(ucsbOrganizationRepository);
@@ -223,7 +223,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     UCSBOrganization organization = new UCSBOrganization("123", "Short name", "Full name", true);
     when(ucsbOrganizationRepository.findById("123")).thenReturn(Optional.of(organization));
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "123"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isOk())
         .andExpect(content().json(mapper.writeValueAsString(organization)));
     verify(ucsbOrganizationRepository).findById("123");
@@ -234,7 +234,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   public void getting_a_missing_organization_returns_404() throws Exception {
     when(ucsbOrganizationRepository.findById("123")).thenReturn(Optional.empty());
     mockMvc
-        .perform(get("/api/UCSBOrganization").param("id", "123"))
+        .perform(get("/api/UCSBOrganization").param("orgCode", "123"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.type").value("EntityNotFoundException"))
         .andExpect(jsonPath("$.message").value("id 123 not found"));
@@ -248,7 +248,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     UCSBOrganization organization = new UCSBOrganization("123", "Short name", "Full name", false);
     when(ucsbOrganizationRepository.findById("123")).thenReturn(Optional.of(organization));
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "123").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "123").with(csrf()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value("record 123 deleted"));
     verify(ucsbOrganizationRepository).findById("123");
@@ -260,7 +260,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
   public void deleting_a_missing_organization_returns_404() throws Exception {
     when(ucsbOrganizationRepository.findById("123")).thenReturn(Optional.empty());
     mockMvc
-        .perform(delete("/api/UCSBOrganization").param("id", "123").with(csrf()))
+        .perform(delete("/api/UCSBOrganization").param("orgCode", "123").with(csrf()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.type").value("EntityNotFoundException"))
         .andExpect(jsonPath("$.message").value("record 123 not found"));
@@ -283,7 +283,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     mockMvc
         .perform(
             put("/api/UCSBOrganization")
-                .param("id", "SKY")
+                .param("orgCode", "SKY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(incoming))
                 .with(csrf()))
@@ -308,7 +308,7 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
 
   @WithMockUser(roles = {"ADMIN", "USER"})
   @Test
-  public void single_record_routes_require_id() throws Exception {
+  public void single_record_routes_require_org_code() throws Exception {
     mockMvc.perform(get("/api/UCSBOrganization")).andExpect(status().isBadRequest());
     mockMvc
         .perform(delete("/api/UCSBOrganization").with(csrf()))
@@ -329,14 +329,14 @@ public class UCSBOrganizationControllerTests extends ControllerTestCase {
     mockMvc
         .perform(
             put("/api/UCSBOrganization")
-                .param("id", "SKY")
+                .param("orgCode", "SKY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf()))
         .andExpect(status().isBadRequest());
     mockMvc
         .perform(
             put("/api/UCSBOrganization")
-                .param("id", "SKY")
+                .param("orgCode", "SKY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{")
                 .with(csrf()))
